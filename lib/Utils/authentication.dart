@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:qrcode/generate.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
@@ -48,6 +49,8 @@ class Authentication {
             await auth.signInWithPopup(authProvider);
 
         user = userCredential.user;
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setBool('login', false);
       } catch (e) {
         print(e);
       }

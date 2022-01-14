@@ -6,15 +6,13 @@ import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:qrcode/Screen/sign_in.dart';
 import 'package:qrcode/Utils/authentication.dart';
-import 'package:qrcode/main.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class GeneratePage extends StatefulWidget {
-  const GeneratePage({Key? key, required User user})
+  const GeneratePage({Key? key, User? user})
       : _user = user,
         super(key: key);
 
-  final User _user;
+  final User? _user;
   @override
   State<StatefulWidget> createState() => GeneratePageState();
 }
@@ -26,13 +24,12 @@ class GeneratePageState extends State<GeneratePage> {
 
   @override
   void initState() {
-    _user = widget._user;
+    _user = widget._user!;
     List<String> dominio = _user.email!.split('@');
     if (dominio[1] != "ittizimin.edu.mx") {
-      Authentication.signOut(context: context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => MyApp(),
+          builder: (context) => SignInScreen(),
         ),
       );
     } else {
@@ -44,7 +41,7 @@ class GeneratePageState extends State<GeneratePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Generador QR'),
+        title: Text(_user.displayName!),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.login, color: Colors.white, size: 30.0),
@@ -71,16 +68,6 @@ class GeneratePageState extends State<GeneratePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Image.network(
-              _user.photoURL!,
-              height: 50,
-              width: 50,
-              alignment: Alignment.center,
-            ),
-            Text(
-              _user.displayName!,
-              textAlign: TextAlign.center,
-            ),
             QrImage(
               data: qrData,
             ),
@@ -92,10 +79,20 @@ class GeneratePageState extends State<GeneratePage> {
                 onPressed: () async {
                   if (qrdataFeed.text.isEmpty) {
                     setState(() {
-                      int timestamp = DateTime.now().millisecondsSinceEpoch;
-                      String time = timestamp.toString();
+                      int time_hour = DateTime.now().hour;
+                      int time_min = DateTime.now().minute;
+                      int day = DateTime.now().day;
+                      int month = DateTime.now().month;
+                      int year = DateTime.now().year;
+                      String time =
+                          time_hour.toString() + ":" + time_min.toString();
+                      String date = day.toString() +
+                          "-" +
+                          month.toString() +
+                          "-" +
+                          year.toString();
                       List<String> matricula = _user.email!.split('@');
-                      qrData = matricula[0] + "_IN_" + time;
+                      qrData = matricula[0] + "_IN_" + time + "_" + date;
                     });
                   } else {
                     setState(() {
@@ -122,10 +119,20 @@ class GeneratePageState extends State<GeneratePage> {
                   if (qrData.isNotEmpty) {
                     //a little validation for the textfield
                     setState(() {
-                      int timestamp = DateTime.now().millisecondsSinceEpoch;
-                      String time = timestamp.toString();
+                      int time_hour = DateTime.now().hour;
+                      int time_min = DateTime.now().minute;
+                      int day = DateTime.now().day;
+                      int month = DateTime.now().month;
+                      int year = DateTime.now().year;
+                      String time =
+                          time_hour.toString() + ":" + time_min.toString();
+                      String date = day.toString() +
+                          "-" +
+                          month.toString() +
+                          "-" +
+                          year.toString();
                       List<String> matricula = _user.email!.split('@');
-                      qrData = matricula[0] + "_OUT_" + time;
+                      qrData = matricula[0] + "_OUT_" + time + "_" + date;
                     });
                   }
                 },
