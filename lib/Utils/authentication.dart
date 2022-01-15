@@ -5,6 +5,7 @@ import 'package:qrcode/generate.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:qrcode/Screen/sign_in.dart';
 
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
@@ -47,7 +48,6 @@ class Authentication {
       try {
         final UserCredential userCredential =
             await auth.signInWithPopup(authProvider);
-
         user = userCredential.user;
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setBool('login', false);
@@ -103,12 +103,18 @@ class Authentication {
 
   static Future<void> signOut({required BuildContext context}) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-
     try {
       if (!kIsWeb) {
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => SignInScreen(),
+        ),
+      );
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool('login', true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         Authentication.customSnackBar(

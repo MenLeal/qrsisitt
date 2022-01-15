@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:qrcode/Screen/sign_in.dart';
 import 'package:qrcode/Utils/authentication.dart';
+import 'package:qrcode/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GeneratePage extends StatefulWidget {
   const GeneratePage({Key? key, User? user})
@@ -20,18 +21,13 @@ class GeneratePage extends StatefulWidget {
 class GeneratePageState extends State<GeneratePage> {
   late User _user;
   String qrData = "PARA GENERAR CODIGO PULSE EL BOTON";
-  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   void initState() {
     _user = widget._user!;
     List<String> dominio = _user.email!.split('@');
     if (dominio[1] != "ittizimin.edu.mx") {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => SignInScreen(),
-        ),
-      );
+      Authentication.signOut(context: context);
     } else {
       super.initState();
     }
@@ -45,10 +41,12 @@ class GeneratePageState extends State<GeneratePage> {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.login, color: Colors.white, size: 30.0),
-              onPressed: () {
-                _googleSignIn.signOut().then((value) {
+              onPressed: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                preferences.setBool('login', true);
+                Authentication.signOut(context: context).then((value) {
                   setState(() {
-                    Authentication.signOut(context: context);
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => SignInScreen(),

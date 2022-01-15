@@ -51,15 +51,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     Authentication.signOut(context: context);
-                    return Text("ERROR VERIFICAR");
                   } else if (snapshot.connectionState == ConnectionState.done) {
                     return GoogleSignInButton();
                   }
-                  return CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.redAccent,
-                    ),
-                  );
+                  return GoogleSignInButton();
                 },
               ),
             ],

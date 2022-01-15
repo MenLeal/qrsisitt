@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:qrcode/Screen/sign_in.dart';
 import 'package:qrcode/Utils/authentication.dart';
 import 'package:qrcode/generate.dart';
 
@@ -34,7 +35,9 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 });
                 User? user =
                     await Authentication.signInWithGoogle(context: context);
-
+                setState(() {
+                  _isSigningIn = false;
+                });
                 if (user != null) {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
