@@ -5,8 +5,8 @@ import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:qrcode/Screen/sign_in.dart';
 import 'package:qrcode/Utils/authentication.dart';
-import 'package:qrcode/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class GeneratePage extends StatefulWidget {
   const GeneratePage({Key? key, User? user})
@@ -28,6 +28,14 @@ class GeneratePageState extends State<GeneratePage> {
     List<String> dominio = _user.email!.split('@');
     if (dominio[1] != "ittizimin.edu.mx") {
       Authentication.signOut(context: context);
+      Fluttertoast.showToast(
+          msg: "USAR CUENTA INSTITUCIONAL",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     } else {
       super.initState();
     }

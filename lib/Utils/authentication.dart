@@ -108,13 +108,13 @@ class Authentication {
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool('login', true);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => SignInScreen(),
         ),
       );
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setBool('login', true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         Authentication.customSnackBar(
